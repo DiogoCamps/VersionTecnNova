@@ -1,0 +1,149 @@
+/* reset básico */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #ddd;
+}
+
+body {
+  background-color: #121212;
+  padding: 20px;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+h1 {
+  color: #1db954; /* verde TechNova */
+}
+
+.btn {
+  padding: 8px 16px;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+.btn-green {
+  background-color: #1db954;
+  color: #121212;
+}
+
+.btn-green:hover {
+  background-color: #17a54d;
+}
+
+.btn-gray {
+  background-color: #333;
+  color: #ccc;
+}
+
+.btn-gray:hover {
+  background-color: #555;
+}
+
+.search-bar {
+  margin-bottom: 15px;
+}
+
+#input-busca {
+  width: 100%;
+  padding: 10px;
+  border-radius: 6px;
+  border: none;
+  background-color: #222;
+  color: #eee;
+  font-size: 1rem;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #181818;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+th, td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #222;
+}
+
+th {
+  background-color: #1f1f1f;
+}
+
+tbody tr:hover {
+  background-color: #2a2a2a;
+}
+
+img.produto-img {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+form {
+  max-width: 480px;
+  margin: auto;
+  background-color: #181818;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+form label {
+  display: block;
+  margin-top: 15px;
+  font-weight: 600;
+  color: #ccc;
+}
+
+form input[type="text"],
+form input[type="number"],
+form textarea,
+form input[type="file"] {
+  width: 100%;
+  padding: 10px;
+  margin-top: 6px;
+  border-radius: 6px;
+  border: none;
+  background-color: #222;
+  color: #eee;
+  font-size: 1rem;
+  resize: vertical;
+}
+
+form textarea {
+  height: 80px;
+}
+
+#preview-imagem img {
+  margin-top: 10px;
+  max-width: 150px;
+  border-radius: 6px;
+}
+
+@media (max-width: 600px) {
+  body {
+    padding: 10px;
+  }
+
+  header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .btn {
+    margin-top: 10px;
+  }
+}
