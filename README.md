@@ -1,3 +1,3 @@
 # VersionTecnNova
 
-Criei essa versão do TecNova, com BeckEnd e FrontEnd prontos, basta executar e testar
+Criei essa versão do TecNova, com BeckEnd pronto - resta o front end e testar
