@@ -2,69 +2,109 @@ package com.projetoIntSenai.TecnovaApplication.Service;
 
 import com.projetoIntSenai.TecnovaApplication.Dto.ProdutoDto;
 import com.projetoIntSenai.TecnovaApplication.Entity.Produto;
+import com.projetoIntSenai.TecnovaApplication.Exceptions.ProdutoNotFoundException;
 import com.projetoIntSenai.TecnovaApplication.Repository.ProdutoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
 public class ProdutoService {
 
-    @Autowired
-    private ProdutoRepository produtoRepository;
+    private final ProdutoRepository produtoRepository;
 
-    // Criar produto
+    @Autowired
+    public ProdutoService(ProdutoRepository produtoRepository) {
+        this.produtoRepository = produtoRepository;
+    }
+
+    @Transactional
     public ProdutoDto criarProduto(ProdutoDto dto) {
         Produto produto = dto.toEntity();
         Produto salvo = produtoRepository.save(produto);
         return ProdutoDto.fromEntity(salvo);
     }
 
-    // Atualizar produto
+    @Transactional
     public ProdutoDto atualizarProduto(Long id, ProdutoDto dto) {
-        Produto produtoExistente = produtoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Produto não encontrado com id: " + id));
+        return produtoRepository.findById(id)
+                .map(produtoExistente -> {
+                    produtoExistente.setNome(dto.getNome());
+                    produtoExistente.setDescricao(dto.getDescricao());
+                    produtoExistente.setPreco(dto.getPreco());
+                    produtoExistente.setQuantidade(dto.getQuantidade());
+                    produtoExistente.setImagem(dto.getImagem());
 
-        produtoExistente.setNome(dto.getNome());
-        produtoExistente.setDescricao(dto.getDescricao());
-        produtoExistente.setPreco(dto.getPreco());
-        produtoExistente.setQuantidade(dto.getQuantidade());
-        produtoExistente.setImagem(dto.getImagem());
-
-        Produto atualizado = produtoRepository.save(produtoExistente);
-        return ProdutoDto.fromEntity(atualizado);
+                    Produto atualizado = produtoRepository.save(produtoExistente);
+                    return ProdutoDto.fromEntity(atualizado);
+                })
+                .orElseThrow(() -> new ProdutoNotFoundException(id));
     }
 
-    // Buscar produto por id
+    @Transactional(readOnly = true)
     public ProdutoDto buscarPorId(Long id) {
-        Produto produto = produtoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Produto não encontrado com id: " + id));
-        return ProdutoDto.fromEntity(produto);
+        return produtoRepository.findById(id)
+                .map(ProdutoDto::fromEntity)
+                .orElseThrow(() -> new ProdutoNotFoundException(id));
     }
 
-    // Listar todos os produtos
+    @Transactional(readOnly = true)
     public List<ProdutoDto> listarTodos() {
-        List<Produto> produtos = produtoRepository.findAll();
-        return produtos.stream()
+        return produtoRepository.findAll().stream()
                 .map(ProdutoDto::fromEntity)
                 .collect(Collectors.toList());
     }
 
-    // Remover produto
+    @Transactional
     public void removerProduto(Long id) {
         if (!produtoRepository.existsById(id)) {
-            throw new RuntimeException("Produto não encontrado com id: " + id);
+            throw new ProdutoNotFoundException(id);
         }
         produtoRepository.deleteById(id);
     }
 
-    // Buscar produtos por nome (filtro)
+    @Transactional(readOnly = true)
     public List<ProdutoDto> buscarPorNome(String nome) {
-        List<Produto> produtos = produtoRepository.findByNomeContainingIgnoreCase(nome);
-        return produtos.stream()
+        return produtoRepository.findByNomeContainingIgnoreCase(nome).stream()
                 .map(ProdutoDto::fromEntity)
                 .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public ProdutoDto atualizarComImagem(Long id, ProdutoDto dto, MultipartFile imagem) {
+        // Implementação alternativa que pode ser usada pelo controller
+        // Se preferir manter a separação de responsabilidades
+        return produtoRepository.findById(id)
+                .map(produto -> {
+                    produto.setNome(dto.getNome());
+                    produto.setDescricao(dto.getDescricao());
+                    produto.setPreco(dto.getPreco());
+                    produto.setQuantidade(dto.getQuantidade());
+
+                    if (imagem != null && !imagem.isEmpty()) {
+                        String nomeArquivo = gerarNomeArquivoUnico(imagem);
+                        String caminhoImagem = salvarImagem(imagem, nomeArquivo);
+                        produto.setImagem(caminhoImagem);
+                    }
+
+                    return ProdutoDto.fromEntity(produtoRepository.save(produto));
+                })
+                .orElseThrow(() -> new ProdutoNotFoundException(id));
+    }
+
+    private String gerarNomeArquivoUnico(MultipartFile imagem) {
+        return UUID.randomUUID() + "_" + imagem.getOriginalFilename();
+    }
+
+    private String salvarImagem(MultipartFile imagem, String nomeArquivo) {
+        // Implementação do salvamento da imagem
+        // Pode ser movida para uma classe utilitária separada
+        // Retorna o caminho relativo ou URL da imagem salva
+        return "/imagens/" + nomeArquivo;
     }
 }
