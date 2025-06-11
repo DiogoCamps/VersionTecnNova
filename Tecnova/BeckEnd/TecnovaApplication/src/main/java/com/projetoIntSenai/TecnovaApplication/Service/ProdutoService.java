@@ -9,39 +9,36 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
 public class ProdutoService {
 
     private final ProdutoRepository produtoRepository;
+    private final FileStorageService fileStorageService;
 
     @Autowired
-    public ProdutoService(ProdutoRepository produtoRepository) {
+    public ProdutoService(ProdutoRepository produtoRepository, FileStorageService fileStorageService) {
         this.produtoRepository = produtoRepository;
+        this.fileStorageService = fileStorageService;
     }
 
     @Transactional
-    public ProdutoDto criarProduto(ProdutoDto dto) {
-        Produto produto = dto.toEntity();
-        Produto salvo = produtoRepository.save(produto);
-        return ProdutoDto.fromEntity(salvo);
+    public ProdutoDto criarProduto(ProdutoDto produtoDto) {
+        Produto produto = produtoDto.toEntity();
+        Produto produtoSalvo = produtoRepository.save(produto);
+        return ProdutoDto.fromEntity(produtoSalvo);
     }
 
     @Transactional
-    public ProdutoDto atualizarProduto(Long id, ProdutoDto dto) {
+    public ProdutoDto atualizarProduto(Long id, ProdutoDto produtoDto) {
         return produtoRepository.findById(id)
                 .map(produtoExistente -> {
-                    produtoExistente.setNome(dto.getNome());
-                    produtoExistente.setDescricao(dto.getDescricao());
-                    produtoExistente.setPreco(dto.getPreco());
-                    produtoExistente.setQuantidade(dto.getQuantidade());
-                    produtoExistente.setImagem(dto.getImagem());
-
-                    Produto atualizado = produtoRepository.save(produtoExistente);
-                    return ProdutoDto.fromEntity(atualizado);
+                    atualizarCamposProduto(produtoExistente, produtoDto);
+                    Produto produtoAtualizado = produtoRepository.save(produtoExistente);
+                    return ProdutoDto.fromEntity(produtoAtualizado);
                 })
                 .orElseThrow(() -> new ProdutoNotFoundException(id));
     }
@@ -76,35 +73,47 @@ public class ProdutoService {
     }
 
     @Transactional
-    public ProdutoDto atualizarComImagem(Long id, ProdutoDto dto, MultipartFile imagem) {
-        // Implementação alternativa que pode ser usada pelo controller
-        // Se preferir manter a separação de responsabilidades
-        return produtoRepository.findById(id)
-                .map(produto -> {
-                    produto.setNome(dto.getNome());
-                    produto.setDescricao(dto.getDescricao());
-                    produto.setPreco(dto.getPreco());
-                    produto.setQuantidade(dto.getQuantidade());
-
-                    if (imagem != null && !imagem.isEmpty()) {
-                        String nomeArquivo = gerarNomeArquivoUnico(imagem);
-                        String caminhoImagem = salvarImagem(imagem, nomeArquivo);
-                        produto.setImagem(caminhoImagem);
-                    }
-
-                    return ProdutoDto.fromEntity(produtoRepository.save(produto));
-                })
+    public ProdutoDto atualizarProdutoComImagem(Long id, ProdutoDto produtoDto, MultipartFile imagem) throws IOException {
+        Produto produto = produtoRepository.findById(id)
                 .orElseThrow(() -> new ProdutoNotFoundException(id));
+
+        atualizarCamposProduto(produto, produtoDto);
+
+        if (imagem != null && !imagem.isEmpty()) {
+            String nomeArquivo = fileStorageService.salvarImagem(imagem);
+            produto.setImagem(nomeArquivo);
+        }
+
+        Produto produtoAtualizado = produtoRepository.save(produto);
+        return ProdutoDto.fromEntity(produtoAtualizado);
     }
 
-    private String gerarNomeArquivoUnico(MultipartFile imagem) {
-        return UUID.randomUUID() + "_" + imagem.getOriginalFilename();
+    private void atualizarCamposProduto(Produto produto, ProdutoDto produtoDto) {
+        produto.setNome(produtoDto.getNome());
+        produto.setDescricao(produtoDto.getDescricao());
+        produto.setPreco(produtoDto.getPreco());
+        produto.setQuantidade(produtoDto.getQuantidade());
+
+        // Mantém a imagem existente se não for fornecida nova
+        if (produtoDto.getImagem() != null) {
+            produto.setImagem(produtoDto.getImagem());
+        }
     }
 
-    private String salvarImagem(MultipartFile imagem, String nomeArquivo) {
-        // Implementação do salvamento da imagem
-        // Pode ser movida para uma classe utilitária separada
-        // Retorna o caminho relativo ou URL da imagem salva
-        return "/imagens/" + nomeArquivo;
+    @Transactional
+    public void removerImagemDoProduto(Long id) {
+        Produto produto = produtoRepository.findById(id)
+                .orElseThrow(() -> new ProdutoNotFoundException(id));
+
+        if (produto.getImagem() != null && !produto.getImagem().isEmpty()) {
+            try {
+                // Implemente a lógica para remover o arquivo físico se necessário
+                // fileStorageService.removerImagem(produto.getImagem());
+                produto.setImagem(null);
+                produtoRepository.save(produto);
+            } catch (Exception e) {
+                throw new RuntimeException("Falha ao remover imagem do produto", e);
+            }
+        }
     }
 }

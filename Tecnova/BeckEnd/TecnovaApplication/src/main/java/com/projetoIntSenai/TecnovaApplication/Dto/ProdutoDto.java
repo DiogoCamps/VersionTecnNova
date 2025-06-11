@@ -1,6 +1,7 @@
 package com.projetoIntSenai.TecnovaApplication.Dto;
 
 import com.projetoIntSenai.TecnovaApplication.Entity.Produto;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,11 +10,22 @@ import java.math.BigDecimal;
 
 public class ProdutoDto {
     private Long id;
+
+    @NotBlank(message = "Nome é obrigatório")
+    @Size(max = 100, message = "Nome não pode ter mais que 100 caracteres")
     private String nome;
+
+    @Size(max = 500, message = "Descrição não pode ter mais que 500 caracteres")
     private String descricao;
+
+    @Positive(message = "Preço deve ser positivo")
+    @Digits(integer = 13, fraction = 2, message = "Preço deve ter no máximo 13 dígitos inteiros e 2 decimais")
     private BigDecimal preco;
+
+    @PositiveOrZero(message = "Quantidade não pode ser negativa")
     private Integer quantidade;
-    private String imagem;  // caminho da imagem no servidor
+
+    private String imagem;
 
     public ProdutoDto() {
 
@@ -27,6 +39,19 @@ public class ProdutoDto {
         this.quantidade = quantidade;
         this.imagem = imagem;
     }
+
+    // Melhorar métodos de conversão
+    public static ProdutoDto fromEntity(Produto produto) {
+        return new ProdutoDto(
+                produto.getId(),
+                produto.getNome(),
+                produto.getDescricao(),
+                produto.getPreco(),
+                produto.getQuantidade(),
+                produto.getImagem()
+        );
+    }
+
 
     public Long getId() {
         return id;
@@ -76,27 +101,14 @@ public class ProdutoDto {
         this.imagem = imagem;
     }
 
-    // Método para converter Produto para ProdutoDTO
-    public static ProdutoDto fromEntity(Produto produto) {
-        ProdutoDto dto = new ProdutoDto();
-        dto.setId(produto.getId());
-        dto.setNome(produto.getNome());
-        dto.setDescricao(produto.getDescricao());
-        dto.setPreco(produto.getPreco());
-        dto.setQuantidade(produto.getQuantidade());
-        dto.setImagem(produto.getImagem());
-        return dto;
-    }
-
-    // Método para converter ProdutoDTO para Produto
     public Produto toEntity() {
-        Produto produto = new Produto();
-        produto.setId(this.getId());
-        produto.setNome(this.getNome());
-        produto.setDescricao(this.getDescricao());
-        produto.setPreco(this.getPreco());
-        produto.setQuantidade(this.getQuantidade());
-        produto.setImagem(this.getImagem());
-        return produto;
+        return new Produto(
+                this.id,
+                this.nome,
+                this.descricao,
+                this.preco,
+                this.quantidade,
+                this.imagem
+        );
     }
 }

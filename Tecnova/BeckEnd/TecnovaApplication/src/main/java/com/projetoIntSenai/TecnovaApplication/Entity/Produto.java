@@ -7,25 +7,43 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "produtos") // Boa prática nomear a tabela explicitamente
 public class Produto implements Serializable {
+    private static final long serialVersionUID = 1L; // Adicionar para serialização
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 100) // Definir tamanho máximo
     private String nome;
 
+    @Column(length = 500) // Aumentar tamanho para descrição
     private String descricao;
 
     @Column(nullable = false, precision = 15, scale = 2)
     private BigDecimal preco;
 
     @Column(nullable = false)
-    private Integer quantidade;
+    private Integer quantidade = 0; // Valor padrão
 
-    private String imagem; // caminho da imagem para ser salva no servidor
+    @Column(length = 255) // Caminhos de arquivo podem ser longos
+    private String imagem;
+
+    // Adicionar campos de auditoria
+    @Column(name = "data_criacao", updatable = false)
+    private LocalDateTime dataCriacao = LocalDateTime.now();
+
+    @Column(name = "data_atualizacao")
+    private LocalDateTime dataAtualizacao;
+
+    @PreUpdate
+    protected void onUpdate() {
+        this.dataAtualizacao = LocalDateTime.now();
+    }
 
     public Produto() {
 

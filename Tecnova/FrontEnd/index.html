@@ -1,43 +1,144 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Gestão de Produtos - TechNova</title>
-<link rel="stylesheet" href="styles.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechNova - Sistema de Vendas</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
+    <header>
+        <div class="logo-container">
+            <img src="images/logo.png" alt="TechNova Logo" class="logo">
+            <h1>TechNova - Sistema de Vendas</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#" class="active" id="nav-home"><i class="fas fa-home"></i> Início</a></li>
+                <li><a href="#" id="nav-products"><i class="fas fa-box-open"></i> Produtos</a></li>
+                <li><a href="reports.html" id="nav-reports"><i class="fas fa-chart-bar"></i> Relatórios</a></li>
+            </ul>
+        </nav>
+    </header>
 
-<h1>TechNova - Gestão de Produtos</h1>
+    <main>
+        <section id="home-section" class="active-section">
+            <div class="hero">
+                <h2>Bem-vindo ao Sistema de Vendas TechNova</h2>
+                <p>Gerencie seu catálogo de produtos eletrônicos de forma eficiente</p>
+            </div>
+        </section>
 
-<div class="form-section">
-  <h2>Cadastrar / Atualizar Produto</h2>
-  <form id="formProduto">
-    <input type="hidden" id="produtoId" />
-    <label>Nome:</label>
-    <input type="text" id="nome" required />
-    <label>Descrição:</label>
-    <textarea id="descricao"></textarea>
-    <label>Preço:</label>
-    <input type="number" step="0.01" id="preco" required />
-    <label>Quantidade:</label>
-    <input type="number" id="quantidade" required />
-    <label>Imagem (opcional):</label>
-    <input type="file" id="imagem" accept="image/*" />
-    <button type="submit">Salvar Produto</button>
-    <button type="button" id="limparBtn">Limpar Formulário</button>
-  </form>
-</div>
+        <section id="products-section">
+            <div class="section-header">
+                <h2>Gerenciamento de Produtos</h2>
+                <button id="add-product-btn" class="btn-primary">
+                    <i class="fas fa-plus"></i> Adicionar Produto
+                </button>
+            </div>
 
-<div class="form-section">
-  <h2>Buscar Produtos</h2>
-  <input type="text" id="filtroNome" placeholder="Filtrar por nome" />
-  <button id="btnBuscar">Buscar</button>
-  <button id="btnListar">Listar Todos</button>
-</div>
+            <div class="search-container">
+                <input type="text" id="search-input" placeholder="Buscar produtos...">
+                <button id="search-btn" class="btn-secondary">
+                    <i class="fas fa-search"></i> Buscar
+                </button>
+            </div>
 
-<div id="listaProdutos"></div>
+            <div class="products-grid" id="products-container">
+                <!-- Produtos serão carregados aqui via JavaScript -->
+                <div class="loading">Carregando produtos...</div>
+            </div>
+        </section>
+    </main>
 
-<script src="app.js"></script>
+    <!-- Modal para adicionar/editar produto -->
+    <div id="product-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h2 id="modal-title">Adicionar Novo Produto</h2>
+            <form id="product-form">
+                <input type="hidden" id="product-id">
+                
+                <div class="form-group">
+                    <label for="product-name">Nome do Produto</label>
+                    <input type="text" id="product-name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="product-description">Descrição</label>
+                    <textarea id="product-description" rows="3" required></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="product-manufacturer">Fabricante</label>
+                        <select id="product-manufacturer" required>
+                            <option value="">Selecione...</option>
+                            <option value="Philips">Philips</option>
+                            <option value="Acer">Acer</option>
+                            <option value="JBL">JBL</option>
+                            <option value="Fortrek">Fortrek</option>
+                            <option value="Hyperx">Hyperx</option>
+                            <option value="Redragon">Redragon</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="product-color">Cor</label>
+                        <select id="product-color" required>
+                            <option value="">Selecione...</option>
+                            <option value="Preto">Preto</option>
+                            <option value="Branco">Branco</option>
+                            <option value="Vermelho">Vermelho</option>
+                            <option value="Azul">Azul</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="product-price">Preço (R$)</label>
+                        <input type="number" id="product-price" min="0" step="0.01" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="product-quantity">Quantidade em Estoque</label>
+                        <input type="number" id="product-quantity" min="0" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Imagens do Produto</label>
+                    <div id="product-images-container">
+                        <!-- Campos de imagem serão adicionados aqui -->
+                    </div>
+                    <button type="button" id="add-image-btn" class="btn-secondary">
+                        <i class="fas fa-image"></i> Adicionar Imagem
+                    </button>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" id="cancel-btn" class="btn-secondary">Cancelar</button>
+                    <button type="submit" id="save-btn" class="btn-primary">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal de confirmação -->
+    <div id="confirm-modal" class="modal">
+        <div class="modal-content small">
+            <h2 id="confirm-title">Confirmar Exclusão</h2>
+            <p id="confirm-message">Tem certeza que deseja excluir este produto?</p>
+            <div class="form-actions">
+                <button type="button" id="confirm-cancel" class="btn-secondary">Cancelar</button>
+                <button type="button" id="confirm-ok" class="btn-danger">Excluir</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/productService.js"></script>
+    <script src="js/main.js"></script>
 </body>
 </html>

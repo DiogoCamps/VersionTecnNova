@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechNova - Relatórios</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <header>
+        <div class="logo-container">
+            <img src="images/logo.png" alt="TechNova Logo" class="logo">
+            <h1>TechNova - Relatórios</h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="index.html" id="nav-home"><i class="fas fa-home"></i> Início</a></li>
+                <li><a href="index.html" id="nav-products"><i class="fas fa-box-open"></i> Produtos</a></li>
+                <li><a href="#" class="active" id="nav-reports"><i class="fas fa-chart-bar"></i> Relatórios</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="reports-section">
+            <h2>Relatórios de Produtos</h2>
+            
+            <div class="report-cards">
+                <div class="report-card">
+                    <h3>Produtos por Fabricante</h3>
+                    <canvas id="manufacturer-chart"></canvas>
+                </div>
+                
+                <div class="report-card">
+                    <h3>Distribuição por Cor</h3>
+                    <canvas id="color-chart"></canvas>
+                </div>
+                
+                <div class="report-card full-width">
+                    <h3>Top 5 Produtos em Estoque</h3>
+                    <canvas id="stock-chart"></canvas>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="js/productService.js"></script>
+    <script src="js/chart.js"></script>
+</body>
+</html>
