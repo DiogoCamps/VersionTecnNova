@@ -11,17 +11,13 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
 @Service
 public class FileStorageService {
     private final Path fileStorageLocation;
-    private static final long MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
-    private static final List<String> ALLOWED_CONTENT_TYPES = List.of(
-            "image/jpeg", "image/png", "image/gif"
-    );
+    // As constantes MAX_FILE_SIZE e ALLOWED_CONTENT_TYPES foram removidas.
 
     public FileStorageService() throws RuntimeException {
         this.fileStorageLocation = Paths.get("uploads").toAbsolutePath().normalize();
@@ -33,7 +29,8 @@ public class FileStorageService {
     }
 
     public String salvarImagem(MultipartFile imagem) throws IOException {
-        validarImagem(imagem);
+        // A validação de imagem foi simplificada para apenas verificar se não é nula/vazia.
+        validarArquivoPresente(imagem); // Renomeei o método para refletir a validação simplificada
         String nomeArquivo = gerarNomeArquivoUnico(imagem);
         Path targetLocation = this.fileStorageLocation.resolve(nomeArquivo);
         Files.copy(imagem.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
@@ -50,16 +47,10 @@ public class FileStorageService {
         return resource;
     }
 
-    private void validarImagem(MultipartFile imagem) {
+    // Método de validação simplificado, sem restrições de tamanho ou tipo.
+    private void validarArquivoPresente(MultipartFile imagem) {
         if (imagem == null || imagem.isEmpty()) {
-            throw new IllegalArgumentException("Arquivo de imagem não pode ser vazio");
-        }
-        if (imagem.getSize() > MAX_FILE_SIZE) {
-            throw new IllegalArgumentException("Tamanho máximo excedido (5MB)");
-        }
-        String contentType = imagem.getContentType();
-        if (contentType == null || !ALLOWED_CONTENT_TYPES.contains(contentType)) {
-            throw new IllegalArgumentException("Tipo de arquivo inválido. Use JPEG, PNG ou GIF");
+            throw new IllegalArgumentException("Arquivo de imagem não pode ser vazio.");
         }
     }
 
@@ -67,7 +58,7 @@ public class FileStorageService {
         String originalFilename = Objects.requireNonNull(imagem.getOriginalFilename());
         String extensao = originalFilename.contains(".")
                 ? originalFilename.substring(originalFilename.lastIndexOf("."))
-                : ".bin";
-        return UUID.randomUUID() + extensao.toLowerCase();
+                : ""; // Alterado para string vazia em vez de ".bin" se não houver extensão
+        return UUID.randomUUID().toString() + extensao.toLowerCase(); // Adicionado .toString() para o UUID
     }
 }

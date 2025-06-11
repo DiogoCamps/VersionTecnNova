@@ -1,0 +1,159 @@
+[
+  {
+    "nome": "Fone com Microfone",
+    "textoDescritivo": "Fone de Ouvido com Microfone, Loop Way, P3",
+    "cor": "Branco",
+    "fabricante": "Philips",
+    "preco": 39.99,
+    "quantidade": 27,
+    "imagens": [
+      "https://i.ibb.co/zhRPrqQS/01.jpg",
+      "https://i.ibb.co/Vp0B2h2m/02.jpg",
+      "https://i.ibb.co/nqXtTqG4/03.jpg"
+    ]
+  },
+  {
+    "nome": "Mouse Gamer",
+    "textoDescritivo": "Mouse Gamer Óptico Nitro 7200 DPI, 6 Botões, USB",
+    "cor": "Preto",
+    "fabricante": "Acer",
+    "preco": 79.99,
+    "quantidade": 18,
+    "imagens": [
+      "https://i.ibb.co/60gSPfDP/01.jpg",
+      "https://i.ibb.co/prfqF9fM/02.jpg",
+      "https://i.ibb.co/tTx9zdtd/03.jpg"
+    ]
+  },
+  {
+    "nome": "HeadSet",
+    "textoDescritivo": "HeadSet Gamer com Microfone Quantum II, P3",
+    "cor": "Preto",
+    "fabricante": "JBL",
+    "preco": 119.99,
+    "quantidade": 19,
+    "imagens": [
+      "https://i.ibb.co/xqz36nXW/01.jpg",
+      "https://i.ibb.co/k6zsq6VW/03.jpg",
+      "https://i.ibb.co/wNBdSfg5/02.jpg"
+    ]
+  },
+  {
+    "nome": "Teclado Gamer",
+    "textoDescritivo": "Teclado Mecânico Gamer Phantom, ABNT2",
+    "cor": "Preto",
+    "fabricante": "Fortrek",
+    "preco": 99.99,
+    "quantidade": 12,
+    "imagens": [
+      "https://i.ibb.co/9zDbk1w/01.jpg",
+      "https://i.ibb.co/0j0gTT5H/02.jpg",
+      "https://i.ibb.co/DHCSqKsd/03.jpg"
+    ]
+  },
+  {
+    "nome": "Fone Bluetooth",
+    "textoDescritivo": "Fone de Ouvido Tune Buds, Bluetooth",
+    "cor": "Preto",
+    "fabricante": "JBL",
+    "preco": 389.9,
+    "quantidade": 3,
+    "imagens": [
+      "https://i.ibb.co/pB2hLd9R/03.jpg",
+      "https://i.ibb.co/3mSRMSgd/02.jpg",
+      "https://i.ibb.co/ch0hNMsv/04.jpg"
+    ]
+  },
+  {
+    "nome": "Teclado Slim",
+    "textoDescritivo": "Teclado Membrana Fortrek K15, ABNT2, USB",
+    "cor": "Preto",
+    "fabricante": "Fortrek",
+    "preco": 89.99,
+    "quantidade": 11,
+    "imagens": [
+      "https://i.ibb.co/G4BR1Sds/03.jpg",
+      "https://i.ibb.co/wZr6MgWB/02.jpg",
+      "https://i.ibb.co/tTYkZ85S/01.jpg"
+    ]
+  },
+  {
+    "nome": "Mouse HX",
+    "textoDescritivo": "Mouse Pulsefire Haste 2 Mini, 26000dpi, 6 Botões, Wireless",
+    "cor": "Preto",
+    "fabricante": "Hyperx",
+    "preco": 379.99,
+    "quantidade": 5,
+    "imagens": [
+      "https://i.ibb.co/Zp3rKKBQ/01.jpg",
+      "https://i.ibb.co/fzhyhJfc/02.jpg",
+      "https://i.ibb.co/nskSxbrP/03.jpg"
+    ]
+  },
+
+  {
+    "nome": "Fone Wireless",
+    "textoDescritivo": "Fone de Ouvido Tune Flex, Wireless",
+    "cor": "Preto",
+    "fabricante": "JBL",
+    "preco": 439.99,
+    "quantidade": 14,
+    "imagens": [
+      "https://i.ibb.co/JjM8Kn9B/02.jpg",
+      "https://i.ibb.co/XrWMYMZj/03.jpg",
+      "https://i.ibb.co/ksHzyn0Q/01.jpg"
+    ]
+  },
+  {
+    "nome": "Teclado Slim",
+    "textoDescritivo": "Teclado Membrana Fortrek K15, ABNT2, USB",
+    "cor": "Branco",
+    "fabricante": "Fortrek",
+    "preco": 105.99,
+    "quantidade": 8,
+    "imagens": [
+      "https://i.ibb.co/RGDt1tQG/03.jpg",
+      "https://i.ibb.co/wrsf52qB/02.jpg",
+      "https://i.ibb.co/XfcFtrCH/01.jpg"
+    ]
+  },
+  {
+    "nome": "Mouse King",
+    "textoDescritivo": "Mouse King Pro Horda World of Warcraft, 26000dpi, 5 Botões",
+    "cor": "Vermelho",
+    "fabricante": "Redragon",
+    "preco": 329.99,
+    "quantidade": 6,
+    "imagens": [
+      "https://i.ibb.co/NnGDKpRD/04.jpg",
+      "https://i.ibb.co/8DJncPDX/02.jpg",
+      "https://i.ibb.co/wN0tr7sk/01.jpg"
+    ]
+  },
+  {
+    "nome": "Fone",
+    "textoDescritivo": "Fone de Ouvido Tune 500 Pure Bass, P2",
+    "cor": "Branco",
+    "fabricante": "JBL",
+    "preco": 139.99,
+    "quantidade": 12,
+    "imagens": [
+      "https://i.ibb.co/LdwJHxtZ/01.jpg",
+      "https://i.ibb.co/GQ4T0xTd/03.jpg",
+      "https://i.ibb.co/gFXrgBLk/02.jpg"
+    ]
+  },
+  {
+    "nome": "Mouse King",
+    "textoDescritivo": "Mouse King Pro Horda World of Warcraft, 26000dpi, 5 Botões",
+    "cor": "Azul",
+    "fabricante": "Redragon",
+    "preco": 319.99,
+    "quantidade": 8,
+    "imagens": [
+      "https://i.ibb.co/R47938fc/01.jpg",
+      "https://i.ibb.co/fV3CvpfR/02.jpg",
+      "https://i.ibb.co/ccdSz1n9/03.jpg"
+    ]
+  }
+]
