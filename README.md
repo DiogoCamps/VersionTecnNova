@@ -1,3 +1,4 @@
-# VersionTecnNova
-
-Criei essa versão do TecNova, com BeckEnd pronto - resta o front end e testar
+Diogo Campos
+Gabriel Augusto
+Pedro Custódio
+Wesley Moura
