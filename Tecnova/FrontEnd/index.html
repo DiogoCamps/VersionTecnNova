@@ -4,20 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TechNova - Sistema de Vendas</title>
+    <!-- O CSS deve estar em uma pasta 'css' -->
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
     <header>
         <div class="logo-container">
-            <img src="images/logo.png" alt="TechNova Logo" class="logo">
+            <!-- LOGO REMOVIDA CONFORME SOLICITADO -->
             <h1>TechNova - Sistema de Vendas</h1>
         </div>
         <nav>
             <ul>
                 <li><a href="#" class="active" id="nav-home"><i class="fas fa-home"></i> Início</a></li>
                 <li><a href="#" id="nav-products"><i class="fas fa-box-open"></i> Produtos</a></li>
-                <li><a href="reports.html" id="nav-reports"><i class="fas fa-chart-bar"></i> Relatórios</a></li>
+                <!-- Este link leva para a página de relatórios -->
+                <li><a href="reports.html"><i class="fas fa-chart-bar"></i> Relatórios</a></li>
             </ul>
         </nav>
     </header>
@@ -30,23 +32,26 @@
             </div>
         </section>
 
+        <!-- Seção de Produtos, inicialmente escondida pelo CSS se não for a ativa -->
         <section id="products-section">
             <div class="section-header">
                 <h2>Gerenciamento de Produtos</h2>
-                <button id="add-product-btn" class="btn-primary">
+                <!-- BOTÃO DE ADICIONAR PRODUTO -->
+                <button id="add-product-btn" class="btn btn-primary">
                     <i class="fas fa-plus"></i> Adicionar Produto
                 </button>
             </div>
 
+            <!-- FUNCIONALIDADE DE BUSCA -->
             <div class="search-container">
                 <input type="text" id="search-input" placeholder="Buscar produtos...">
-                <button id="search-btn" class="btn-secondary">
+                <button id="search-btn" class="btn btn-secondary">
                     <i class="fas fa-search"></i> Buscar
                 </button>
             </div>
 
+            <!-- A grade onde os produtos e seus botões de AÇÃO (Editar/Excluir) aparecerão -->
             <div class="products-grid" id="products-container">
-                <!-- Produtos serão carregados aqui via JavaScript -->
                 <div class="loading">Carregando produtos...</div>
             </div>
         </section>
@@ -110,34 +115,36 @@
 
                 <div class="form-group">
                     <label>Imagens do Produto</label>
-                    <div id="product-images-container">
-                        <!-- Campos de imagem serão adicionados aqui -->
+                    <div id="product-images-preview" class="images-preview-container">
+                        <!-- Imagens existentes e novas pré-visualizações aparecerão aqui -->
                     </div>
-                    <button type="button" id="add-image-btn" class="btn-secondary">
+                    <button type="button" id="add-image-btn" class="btn btn-secondary">
                         <i class="fas fa-image"></i> Adicionar Imagem
                     </button>
                 </div>
 
                 <div class="form-actions">
-                    <button type="button" id="cancel-btn" class="btn-secondary">Cancelar</button>
-                    <button type="submit" id="save-btn" class="btn-primary">Salvar</button>
+                    <button type="button" id="cancel-btn" class="btn btn-secondary">Cancelar</button>
+                    <!-- BOTÃO DE SALVAR (CRIAR ou ATUALIZAR) -->
+                    <button type="submit" id="save-btn" class="btn btn-primary">Salvar</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- Modal de confirmação -->
+    <!-- Modal de confirmação para APAGAR -->
     <div id="confirm-modal" class="modal">
         <div class="modal-content small">
             <h2 id="confirm-title">Confirmar Exclusão</h2>
             <p id="confirm-message">Tem certeza que deseja excluir este produto?</p>
             <div class="form-actions">
-                <button type="button" id="confirm-cancel" class="btn-secondary">Cancelar</button>
-                <button type="button" id="confirm-ok" class="btn-danger">Excluir</button>
+                <button type="button" id="confirm-cancel" class="btn btn-secondary">Cancelar</button>
+                <button type="button" id="confirm-ok" class="btn btn-danger">Excluir</button>
             </div>
         </div>
     </div>
 
-    <script src="js/productService.js"></script>
+    <!-- O único script necessário para esta página -->
+    <script src="js/main.js" defer></script>
 </body>
 </html>

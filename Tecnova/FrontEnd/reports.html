@@ -6,9 +6,6 @@
     <title>TechNova - Relatórios</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="js/productService.js"></script>
-
 </head>
 <body>
     <header>
@@ -18,16 +15,19 @@
         </div>
         <nav>
             <ul>
-                <li><a href="index.html" id="nav-home"><i class="fas fa-home"></i> Início</a></li>
-                <li><a href="index.html" id="nav-products"><i class="fas fa-box-open"></i> Produtos</a></li>
-                <li><a href="#" class="active" id="nav-reports"><i class="fas fa-chart-bar"></i> Relatórios</a></li>
+                <!-- Links normais de volta para a página inicial -->
+                <li><a href="index.html"><i class="fas fa-home"></i> Início</a></li>
+                <li><a href="index.html"><i class="fas fa-box-open"></i> Produtos</a></li>
+                <li><a href="reports.html" class="active"><i class="fas fa-chart-bar"></i> Relatórios</a></li>
             </ul>
         </nav>
     </header>
 
     <main>
-        <section id="reports-section">
-            <h2>Relatórios de Produtos</h2>
+        <section id="reports-section" class="active-section">
+            <div class="section-header">
+                 <h2>Relatórios de Inventário</h2>
+            </div>
             
             <div class="report-cards">
                 <div class="report-card">
@@ -48,6 +48,8 @@
         </section>
     </main>
 
-    
+    <!-- Scripts para os gráficos -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/reports.js" defer></script>
 </body>
 </html>

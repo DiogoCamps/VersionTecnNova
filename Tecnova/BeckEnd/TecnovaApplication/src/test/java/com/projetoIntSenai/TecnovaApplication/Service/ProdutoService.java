@@ -27,7 +27,7 @@ public class ProdutoService {
     private ProdutoRepository produtoRepository;
 
     @Autowired
-    private ImagemRepository imagemRepository; // Embora não usado diretamente, é bom ter para futuras operações com imagens
+    private ImagemRepository imagemRepository;
 
     @Autowired
     private FileStorageService fileStorageService;
@@ -40,17 +40,19 @@ public class ProdutoService {
         return produtoRepository.findById(id);
     }
 
+    public List<Produto> findByNomeContainingIgnoreCase(String nome) {
+        return produtoRepository.findByNomeContainingIgnoreCase(nome);
+    }
+
     @Transactional
     public Produto salvarProdutoComImagens(ProdutoDto produtoDto, List<MultipartFile> imagens) throws IOException {
         Produto produto = produtoDto.toEntity();
 
         if (imagens != null && !imagens.isEmpty()) {
             for (MultipartFile imagemFile : imagens) {
-                if (imagemFile != null && !imagemFile.isEmpty()) {
-                    String nomeArquivo = fileStorageService.salvarArquivo(imagemFile);
-                    Imagem novaImagem = new Imagem(nomeArquivo, produto);
-                    produto.addImagem(novaImagem);
-                }
+                String nomeArquivo = fileStorageService.salvarArquivo(imagemFile);
+                Imagem novaImagem = new Imagem(nomeArquivo, produto);
+                produto.addImagem(novaImagem);
             }
         }
 
@@ -71,11 +73,9 @@ public class ProdutoService {
 
         if (novasImagens != null && !novasImagens.isEmpty()) {
             for (MultipartFile imagemFile : novasImagens) {
-                if (imagemFile != null && !imagemFile.isEmpty()) {
-                    String nomeArquivo = fileStorageService.salvarArquivo(imagemFile);
-                    Imagem novaImagem = new Imagem(nomeArquivo, produtoExistente);
-                    produtoExistente.addImagem(novaImagem);
-                }
+                String nomeArquivo = fileStorageService.salvarArquivo(imagemFile);
+                Imagem novaImagem = new Imagem(nomeArquivo, produtoExistente);
+                produtoExistente.addImagem(novaImagem);
             }
         }
 
@@ -87,6 +87,7 @@ public class ProdutoService {
         Produto produto = produtoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Produto não encontrado com ID: " + id));
 
+        // 1. Deleta os arquivos de imagem do sistema de arquivos
         if (produto.getImagens() != null) {
             for (Imagem imagem : produto.getImagens()) {
                 try {
@@ -97,13 +98,46 @@ public class ProdutoService {
             }
         }
 
+        // 2. Deleta o produto do banco.
         produtoRepository.delete(produto);
+    }
+
+
+    @Transactional
+    public void removerImagemDeProduto(Long produtoId, Long imagemId) throws FileNotFoundException {
+        Produto produto = produtoRepository.findById(produtoId)
+                .orElseThrow(() -> new RuntimeException("Produto não encontrado com ID: " + produtoId));
+
+        Imagem imagemParaRemover = imagemRepository.findById(imagemId)
+                .orElseThrow(() -> new FileNotFoundException("Imagem não encontrada com ID: " + imagemId));
+
+        if (!imagemParaRemover.getProduto().getId().equals(produtoId)) {
+            throw new IllegalArgumentException("A imagem não pertence ao produto especificado.");
+        }
+
+        try {
+            fileStorageService.deletarArquivo(imagemParaRemover.getNomeArquivo());
+        } catch (IOException e) {
+            System.err.println("Erro ao deletar arquivo de imagem do disco: " + imagemParaRemover.getNomeArquivo() + ". Erro: " + e.getMessage());
+            throw new RuntimeException("Falha ao deletar arquivo de imagem do disco: " + imagemParaRemover.getNomeArquivo(), e);
+        }
+
+        produto.removeImagem(imagemParaRemover);
+        produtoRepository.save(produto);
     }
 
     public Resource carregarImagem(String nomeArquivo) throws FileNotFoundException {
         return fileStorageService.carregarArquivoComoRecurso(nomeArquivo);
     }
 
+    // --- NOVOS MÉTODOS PARA IMPORTAÇÃO ---
+
+    /**
+     * Importa uma lista de produtos a partir de DTOs, baixando as imagens das URLs.
+     * @param produtosDto A lista de DTOs dos produtos a serem importados.
+     * @return Uma lista das entidades Produto que foram salvas.
+     * @throws IOException Se ocorrer um erro durante o download das imagens.
+     */
     @Transactional
     public List<Produto> importarProdutosDeJson(List<ProdutoDto> produtosDto) throws IOException {
         List<Produto> produtosImportados = new ArrayList<>();
@@ -122,23 +156,30 @@ public class ProdutoService {
                         );
                         imagensParaUpload.add(mockFile);
                     } catch (IOException e) {
-                        System.err.println("Erro ao baixar imagem da URL: " + imageUrl + " para o produto " + dto.getNome() + ". Pulando esta imagem.");
+                        System.err.println("Erro ao baixar imagem da URL: " + imageUrl + " para o produto " + dto.getNome());
                     }
                 }
             }
 
+            // Reutiliza o método de salvar para criar o produto com as imagens baixadas
             Produto produtoSalvo = this.salvarProdutoComImagens(dto, imagensParaUpload);
             produtosImportados.add(produtoSalvo);
         }
         return produtosImportados;
     }
 
+    /**
+     * Baixa os bytes de uma imagem a partir de uma URL.
+     */
     private byte[] downloadImageFromUrl(String imageUrl) throws IOException {
         try (InputStream in = new URL(imageUrl).openStream()) {
             return in.readAllBytes();
         }
     }
 
+    /**
+     * Extrai o nome do arquivo da parte final de uma URL.
+     */
     private String getFilenameFromUrl(String url) {
         return url.substring(url.lastIndexOf('/') + 1);
     }
